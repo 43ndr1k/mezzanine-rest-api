@@ -351,3 +351,15 @@ try:
      from api.settings import *
 except ImportError as e:
     pass
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        'TIMEOUT': 1,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}

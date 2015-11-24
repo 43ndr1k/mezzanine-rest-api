@@ -5,11 +5,17 @@ REST_FRAMEWORK = {
         'rest_framework.serializers.HyperlinkedModelSerializer',
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
     ),
+
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+
     'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
+       'rest_framework.renderers.JSONRenderer',
+   )
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
 #    'DEFAULT_PERMISSION_CLASSES': [
@@ -17,9 +23,17 @@ REST_FRAMEWORK = {
 #    ]
 }
 
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
+
+# API login URL for oauth2_provider (based on default routing in urls.py)
+LOGIN_URL = "/api/auth/login/"
+
 SWAGGER_SETTINGS = {
     'exclude_namespaces': [],
-    'api_version': '0.23',
+    'api_version': '0.1',
     'api_path': '/',
     'enabled_methods': [
         'get',
@@ -33,6 +47,7 @@ SWAGGER_SETTINGS = {
     'is_superuser': False,
     'permission_denied_handler': None,
     'resource_access_handler': None,
+    'token_type': 'Bearer',
     #'base_path':'http://snotes20.com:8000/api-doc',
     'info': {
         'contact': 'info@it-sawade.de',
@@ -48,3 +63,4 @@ SWAGGER_SETTINGS = {
     },
     'doc_expansion': 'none',
 }
+

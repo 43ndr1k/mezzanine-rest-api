@@ -1,11 +1,16 @@
 from __future__ import unicode_literals
-from .views import BlogViewSet
 from django.conf.urls import url, include
-from rest_framework import routers
 
+from rest_framework import routers
+from .views import BlogViewSet, PageViewSet, PostViewSet, UserViewSet, CategoryViewSet, SiteViewSet
 
 router = routers.DefaultRouter()
 router.register(r'blog', BlogViewSet, base_name='blogrest')
+router.register(r'pages', PageViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'users', UserViewSet)
+router.register(r'categories', CategoryViewSet)
+router.register(r'site', SiteViewSet, SiteViewSet.as_view({'get': 'retrieve'}))
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -13,3 +18,18 @@ urlpatterns = [
     url(r'^oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
