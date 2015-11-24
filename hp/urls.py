@@ -6,9 +6,7 @@ from django.contrib import admin
 
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
-from rest_framework import routers
-#from mezzanine_api.urls import router
-from api.views import BlogViewSet
+
 
 admin.autodiscover()
 
@@ -27,18 +25,16 @@ if settings.USE_MODELTRANSLATION:
         url('^i18n/$', 'django.views.i18n.set_language', name='set_language'),
     )
 
-router = routers.DefaultRouter()
-router.register(r'blog', BlogViewSet, base_name='blogrest')
+
 
 
 
 urlpatterns += patterns('',
 
     # REST API URLs
-    #("^api/", include("api.urls")),
+    ("^api/", include("api.urls")),
 
-    url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^api/', include(router.urls)),
+
 
     # We don't want to presume how your homepage works, so here are a
     # few patterns you can use to set it up.
