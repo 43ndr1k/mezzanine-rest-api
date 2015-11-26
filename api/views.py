@@ -11,7 +11,7 @@ from .permissions import IsAdminOrReadOnly
 from .mixins import PutUpdateModelMixin
 
 from django.contrib.auth.models import User
-from mezzanine.blog.models import BlogPost as Post, BlogCategory
+from mezzanine.blog.models import BlogPost as Post, BlogCategory, BlogPost
 from mezzanine.pages.models import Page
 from django.contrib.sites.models import Site
 from django.views.decorators.cache import never_cache
@@ -142,6 +142,20 @@ class PostViewSet(mixins.CreateModelMixin,
     search_fields = ('title', 'content',)
     serializer_class = PostSerializer
     pagination_class = PostPagination
+
+    def create(self, request, *args, **kwargs):
+        # prüfen der daten
+        post = BlogPost(user_id=request.data['user'],
+                        title=request.data['title'],
+                        content='<p>'+request.data['content']+'</p>',
+                        status=2,
+                        #allow_comments='on',
+                        gen_description=True,
+                        in_sitemap=True,
+        )
+        post.save()
+        return HttpResponse('<a href="'+ post.get_absolute_url() + '">' + post.title + '</a>')
+
 
 class UserFilter(django_filters.FilterSet):
     """
