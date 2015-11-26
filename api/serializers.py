@@ -91,7 +91,7 @@ class PageSerializer(serializers.ModelSerializer):
                   'login_required', 'meta_description', 'tags')
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostsSerializer(serializers.ModelSerializer):
     """
     Serializing all the blog posts
     """
@@ -108,11 +108,11 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'publish_date', 'updated', 'title', 'url', 'short_url', 'content', 'slug',
                   'categories', 'allow_comments', 'comments_count', 'comments', 'tags', 'featured_image')
 
-class CreatePostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     """
     Serializing all the CreatePosts
     """
-    #view_name = 'post'
+    view_name = 'post'
 
     class Meta:
         model = Post

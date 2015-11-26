@@ -5,7 +5,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 import django_filters
 
-from .serializers import UserSerializer, PostSerializer, CategorySerializer, CreatePostSerializer
+from .serializers import UserSerializer, PostsSerializer, CategorySerializer, PostSerializer
 from .serializers import PageSerializer, SiteSerializer
 from .permissions import IsAdminOrReadOnly
 from .mixins import PutUpdateModelMixin
@@ -89,6 +89,10 @@ class PostFilter(django_filters.FilterSet):
         fields = ['category_id', 'category_name', 'tag', 'author_id', 'author_name', 'date_min', 'date_max']
 
 
+class BlogPostView(viewsets.ReadOnlyModelViewSet,
+                   viewsets.GenericViewSet):
+    pass
+
 class PostViewSet(viewsets.ReadOnlyModelViewSet):
     """
     For listing or retrieving blog posts.
@@ -115,14 +119,6 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
               type: string
               description: Filter posts by author's username
               paramType: query
-            - name: date_min
-              type: datetime
-              description: Filter posts by minimum publish date
-              paramType: query
-            - name: date_max
-              type: datetime
-              description: Filter posts by maximum publish date
-              paramType: query
             - name: search
               type: string
               description: Search for blog posts that match the query
@@ -137,16 +133,19 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
     filter_class = PostFilter
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
     search_fields = ('title', 'content',)
-    serializer_class = PostSerializer
+    serializer_class = PostsSerializer
     pagination_class = PostPagination
 
 
 
-class CreateBlogPostViewSet(viewsets.GenericViewSet):
+class BlogPostViewSet(viewsets.GenericViewSet):
+    """
+    For listing, retrieving, creating or updating Blog Post.
+    """
 
     # prüfen der daten
 
-    serializer_class = CreatePostSerializer
+    serializer_class = PostSerializer
     permission_classes = [IsAdminOrReadOnly]
 
 
@@ -155,16 +154,54 @@ class CreateBlogPostViewSet(viewsets.GenericViewSet):
         post = BlogPost(user_id=request.data['user'],
                         title=request.data['title'],
                         content='<p>'+request.data['content']+'</p>',
-                        status=2,
-                        #allow_comments='on',
-                        gen_description=True,
-                        in_sitemap=True,
+                        status=2
         )
+
+        for key,value in request.data.items():
+            if key == 'status':
+                post.status = value
+            if key == 'gen_description':
+                post.gen_description = value
+            if key == 'in_sitemap':
+                post.in_sitemap = value
+            if key == 'slug':
+                post.slug = value
+            if key == 'featured_image':
+                post.featured_image = value
+            if key == 'allow_comments':
+                post.allow_comments = value
+            if key == 'gen_description':
+                post.gen_description = value
+            if key == 'in_sitemap':
+                post.in_sitemap = value
+
         post.save()
 
 
         return HttpResponse('<a href="'+ post.get_absolute_url() + '">' + post.title + '</a>')
 
+    def update(self, request, pk=None):
+        post = BlogPost.objects.get(id=pk)
+        for key,value in request.data.items():
+            if key == 'title':
+                post.title = value
+                post.slug = value
+            if key == 'content':
+                post.content = value
+            if key == 'status':
+                post.status = value
+            if key == 'gen_description':
+                post.gen_description = value
+            if key == 'in_sitemap':
+                post.in_sitemap = value
+            if key == 'slug':
+                post.slug = value
+            if key == 'featured_image':
+                post.featured_image = value
+
+        post.save()
+
+        return HttpResponse('<a href="'+ post.get_absolute_url() + '">' + post.title + '</a>')
 
 class UserFilter(django_filters.FilterSet):
     """
