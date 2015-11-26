@@ -101,8 +101,20 @@ class PostSerializer(serializers.ModelSerializer):
     tags = serializers.CharField(source='keywords_string', read_only=True)
     short_url = serializers.CharField(source='get_absolute_url', read_only=True)
     comments = CommentSerializer(many=True)
+    view_name = 'get'
 
     class Meta:
         model = Post
         fields = ('id', 'user', 'publish_date', 'updated', 'title', 'url', 'short_url', 'content', 'slug',
                   'categories', 'allow_comments', 'comments_count', 'comments', 'tags', 'featured_image')
+
+class CreatePostSerializer(serializers.ModelSerializer):
+    """
+    Serializing all the CreatePosts
+    """
+    #view_name = 'post'
+
+    class Meta:
+        model = Post
+        fields = ('id', 'user', 'title', 'content', 'slug', 'in_sitemap',
+                  'featured_image', 'gen_description')

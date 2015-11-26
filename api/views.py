@@ -1,11 +1,11 @@
 from django.contrib.admin import filters
 from django.http import HttpResponse
 from rest_framework import viewsets, filters, permissions, mixins
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 import django_filters
 
-from .serializers import UserSerializer, PostSerializer, CategorySerializer
+from .serializers import UserSerializer, PostSerializer, CategorySerializer, CreatePostSerializer
 from .serializers import PageSerializer, SiteSerializer
 from .permissions import IsAdminOrReadOnly
 from .mixins import PutUpdateModelMixin
@@ -89,11 +89,7 @@ class PostFilter(django_filters.FilterSet):
         fields = ['category_id', 'category_name', 'tag', 'author_id', 'author_name', 'date_min', 'date_max']
 
 
-class PostViewSet(mixins.CreateModelMixin,
-                      mixins.RetrieveModelMixin,
-                      PutUpdateModelMixin,
-                      mixins.ListModelMixin,
-                      viewsets.GenericViewSet):
+class PostViewSet(viewsets.ReadOnlyModelViewSet):
     """
     For listing or retrieving blog posts.
     ---
@@ -136,6 +132,7 @@ class PostViewSet(mixins.CreateModelMixin,
               description: Page number
               paramType: query
     """
+
     queryset = Post.objects.published().all().order_by("-publish_date")
     filter_class = PostFilter
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
@@ -143,8 +140,18 @@ class PostViewSet(mixins.CreateModelMixin,
     serializer_class = PostSerializer
     pagination_class = PostPagination
 
+
+
+class CreateBlogPostViewSet(viewsets.GenericViewSet):
+
+    # prüfen der daten
+
+    serializer_class = CreatePostSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
     def create(self, request, *args, **kwargs):
-        # prüfen der daten
+
         post = BlogPost(user_id=request.data['user'],
                         title=request.data['title'],
                         content='<p>'+request.data['content']+'</p>',
@@ -154,6 +161,8 @@ class PostViewSet(mixins.CreateModelMixin,
                         in_sitemap=True,
         )
         post.save()
+
+
         return HttpResponse('<a href="'+ post.get_absolute_url() + '">' + post.title + '</a>')
 
 
