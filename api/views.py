@@ -154,7 +154,8 @@ class BlogPostViewSet(viewsets.GenericViewSet):
         post = BlogPost(user_id=request.data['user'],
                         title=request.data['title'],
                         content='<p>'+request.data['content']+'</p>',
-                        status=2
+                        status=2,
+                        featured_image=''
         )
 
         for key,value in request.data.items():
