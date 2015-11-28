@@ -5,7 +5,7 @@ from mezzanine.pages.models import Page
 from django.contrib.sites.models import Site
 from mezzanine.generic.models import Comment
 from mezzanine.conf import settings
-
+from mezzanine.galleries.models import BaseGallery, Gallery, GalleryImage
 
 class PrivateField(serializers.ReadOnlyField):
     """
@@ -118,3 +118,18 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id', 'user', 'title', 'content', 'slug', 'in_sitemap',
                   'featured_image', 'gen_description')
+
+class GallerySerializer(serializers.ModelSerializer):
+   # view_name = 'gallery'
+
+    class Meta:
+        model = Gallery
+        fields = ('id','content', 'zip_import')
+
+class GalleryDetailSerializer(serializers.ModelSerializer):
+
+    #url = serializers.URLField(source='get_absolute_url_with_host', read_only=True)
+    #gallery_id = serializers.CharField(source='gallery_id', read_only=True)
+    class Meta:
+        model = GalleryImage
+        fields = ('id', 'file', 'description', 'gallery')

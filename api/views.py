@@ -5,7 +5,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 import django_filters
 
-from .serializers import UserSerializer, PostsSerializer, CategorySerializer, PostSerializer
+from .serializers import UserSerializer, PostsSerializer, CategorySerializer, PostSerializer, GallerySerializer, GalleryDetailSerializer
 from .serializers import PageSerializer, SiteSerializer
 from .permissions import IsAdminOrReadOnly
 from .mixins import PutUpdateModelMixin
@@ -15,7 +15,8 @@ from mezzanine.blog.models import BlogPost as Post, BlogCategory, BlogPost
 from mezzanine.pages.models import Page
 from django.contrib.sites.models import Site
 from django.views.decorators.cache import never_cache
-
+from mezzanine.galleries.models import Gallery, GalleryImage
+import json
 class BlogViewSet(viewsets.ViewSet):
 
     def list(self, request):
@@ -278,3 +279,31 @@ class SiteViewSet(ListViewSet):
     """
     queryset = Site.objects.all()
     serializer_class = SiteSerializer
+
+class GalleryViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    For listing or retrieving Gallerys.
+    """
+
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
+
+class GalleryDetailViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    For listing or retrieving Gallery.
+    """
+
+    queryset = GalleryImage.objects.all()
+    serializer_class = GalleryDetailSerializer
+
+
+class GalleryImagesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    For listing or retrieving Gallery.
+    """
+    serializer_class = GalleryDetailSerializer
+
+    def list(self, request, pk=None):
+        images = GalleryImage.objects.get(pk=pk)
+        #serializer =
+        return HttpResponse('ddffdf')
