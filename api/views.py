@@ -291,7 +291,7 @@ class GalleryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class GalleryDetailViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    For listing or retrieving Gallery.
+    For listing Gallery Images.
     """
 
     queryset = GalleryImage.objects.all()
@@ -299,7 +299,9 @@ class GalleryDetailViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GalleryImagesViewSet(viewsets.ReadOnlyModelViewSet):
-
+    """
+    For listing Gallery.
+    """
     queryset = GalleryImage.objects.all()
     serializer_class = ImageDetailSerializer
 
