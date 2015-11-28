@@ -11,9 +11,9 @@ router.register(r'posts', PostViewSet, 'posts')
 router.register(r'post', BlogPostViewSet, 'post')
 router.register(r'users', UserViewSet)
 router.register(r'categories', CategoryViewSet)
-router.register(r'gallery/', GalleryViewSet, 'gallery')
-router.register(r'images/gallery', GalleryImagesViewSet, 'images_gallery')
+router.register(r'gallery', GalleryViewSet, 'gallery')
 router.register(r'images', GalleryDetailViewSet, 'images')
+router.register(r'images/gallery', GalleryImagesViewSet, 'images_gallery')
 router.register(r'site', SiteViewSet, SiteViewSet.as_view({'get': 'retrieve'}))
 
 urlpatterns = [

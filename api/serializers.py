@@ -133,3 +133,14 @@ class GalleryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = GalleryImage
         fields = ('id', 'file', 'description', 'gallery')
+
+
+class ImageDetailSerializer(serializers.ModelSerializer):
+
+    #url = serializers.URLField(source='get_absolute_url_with_host', read_only=True)
+    #gallery_id = serializers.CharField(source='gallery_id', read_only=True)
+
+    class Meta:
+        model = GalleryImage
+        fields = ('id', 'file', 'description', 'gallery')
+

@@ -5,7 +5,8 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 import django_filters
 
-from .serializers import UserSerializer, PostsSerializer, CategorySerializer, PostSerializer, GallerySerializer, GalleryDetailSerializer
+from api import serializers
+from .serializers import UserSerializer, PostsSerializer, CategorySerializer, PostSerializer, GallerySerializer, GalleryDetailSerializer, ImageDetailSerializer
 from .serializers import PageSerializer, SiteSerializer
 from .permissions import IsAdminOrReadOnly
 from .mixins import PutUpdateModelMixin
@@ -298,12 +299,11 @@ class GalleryDetailViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GalleryImagesViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    For listing or retrieving Gallery.
-    """
-    serializer_class = GalleryDetailSerializer
 
-    def list(self, request, pk=None):
-        images = GalleryImage.objects.get(pk=pk)
-        #serializer =
-        return HttpResponse('ddffdf')
+    queryset = GalleryImage.objects.all()
+    serializer_class = ImageDetailSerializer
+
+    def retrieve(self, request, pk=None):
+        images = GalleryImage.objects.filter(gallery=pk)
+        json_data = serializers.ImageDetailSerializer(images,many=True).data
+        return HttpResponse(json_data)
