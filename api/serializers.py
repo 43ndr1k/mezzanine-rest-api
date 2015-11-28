@@ -6,6 +6,7 @@ from django.contrib.sites.models import Site
 from mezzanine.generic.models import Comment
 from mezzanine.conf import settings
 from mezzanine.galleries.models import BaseGallery, Gallery, GalleryImage
+from django.core.serializers.json import DjangoJSONEncoder
 
 class PrivateField(serializers.ReadOnlyField):
     """
@@ -142,5 +143,6 @@ class ImageDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GalleryImage
-        fields = ('id', 'file', 'description', 'gallery')
+        fields = ('id', 'file', 'description')
+
 

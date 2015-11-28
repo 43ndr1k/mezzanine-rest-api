@@ -17,7 +17,7 @@ from mezzanine.pages.models import Page
 from django.contrib.sites.models import Site
 from django.views.decorators.cache import never_cache
 from mezzanine.galleries.models import Gallery, GalleryImage
-import json
+from rest_framework.renderers import JSONRenderer
 class BlogViewSet(viewsets.ViewSet):
 
     def list(self, request):
@@ -305,5 +305,5 @@ class GalleryImagesViewSet(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, pk=None):
         images = GalleryImage.objects.filter(gallery=pk)
-        json_data = serializers.ImageDetailSerializer(images,many=True).data
-        return HttpResponse(json_data)
+        json = JSONRenderer().render(serializers.ImageDetailSerializer(images,many=True).data)
+        return HttpResponse(json)
